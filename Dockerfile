@@ -27,7 +27,7 @@ RUN mkdir -p ${buildroot} && \
     make && \
     make install && \
     cd /home/user && \
-    rm -rf ${buildroot} && \
+    rm -rf ${buildroot}
 WORKDIR /home/user
 
 USER root
