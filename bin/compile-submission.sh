@@ -14,7 +14,7 @@ if [ -z "$(ls -A ./src)" ]; then
 fi
 cp -R $COMMONDIR/framework/. ./
 if [ $OPTIONS = "random" ]; then
-   python $COMMONDIR/generate-random-tester.py $SUBMISSIONDIR/test_env/src/main.c
+   python3 $COMMONDIR/generate-random-tester.py $SUBMISSIONDIR/test_env/src/main.c
 fi
-make all
+make all || exit 1
 

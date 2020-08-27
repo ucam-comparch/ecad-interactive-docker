@@ -1,10 +1,10 @@
 FROM ubuntu:18.04
 ARG container_userid
 
-RUN apt update && \
-    apt install -y --no-install-recommends git ca-certificates && \
-    apt install -y --no-install-recommends autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev && \
-    apt install -y --no-install-recommends device-tree-compiler && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git ca-certificates && \
+    apt-get install -y --no-install-recommends autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev && \
+    apt-get install -y --no-install-recommends device-tree-compiler && \
     rm -rf /var/lib/apt/lists/*
 
 RUN groupadd user
