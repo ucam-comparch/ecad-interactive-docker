@@ -13,24 +13,22 @@ RUN useradd --shell /bin/bash -u ${container_userid} -o -c "" -m user -g user
 USER user
 ENV buildroot=/home/user/build
 ENV RISCV=/home/user/riscv
-RUN mkdir -p ${buildroot}
-
-RUN git clone --recursive https://github.com/riscv/riscv-gnu-toolchain.git ${buildroot}/riscv-gnu-toolchain
-WORKDIR ${buildroot}/riscv-gnu-toolchain
-RUN ./configure --prefix=${RISCV} --with-arch=rv32i
-RUN make
-
-ENV PATH="${RISCV}/bin:${PATH}"
-
-RUN git clone https://github.com/riscv/riscv-isa-sim.git ${buildroot}/riscv-isa-sim
-RUN mkdir ${buildroot}/riscv-isa-sim/build
-WORKDIR ${buildroot}/riscv-isa-sim/build
-RUN ../configure --prefix=${RISCV}
-RUN make
-RUN make install
-
+RUN mkdir -p ${RISCV}/bin
+ENV PATH="${PATH}:${RISCV}/bin"
+RUN mkdir -p ${buildroot} && \
+    git clone --recursive https://github.com/riscv/riscv-gnu-toolchain.git ${buildroot}/riscv-gnu-toolchain && \
+    cd ${buildroot}/riscv-gnu-toolchain && \
+    ./configure --prefix=${RISCV} --with-arch=rv32i && \
+    make && \
+    git clone https://github.com/riscv/riscv-isa-sim.git ${buildroot}/riscv-isa-sim && \
+    mkdir ${buildroot}/riscv-isa-sim/build && \
+    cd ${buildroot}/riscv-isa-sim/build && \
+    ../configure --prefix=${RISCV} && \
+    make && \
+    make install && \
+    cd /home/user && \
+    rm -rf ${buildroot} && \
 WORKDIR /home/user
-RUN rm -rf ${buildroot}
 
 USER root
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
