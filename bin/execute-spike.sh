@@ -1,20 +1,25 @@
 #!/bin/bash
 
 SUBMISSIONDIR=$1
-ARGS=$2
+OPTIONS=$2
 
 cd $SUBMISSIONDIR/test_env
-
-LOG=$(spike --isa=rv32i $ARGS -m0x80000000:0x10000 build/*.elf 2>&1 || true)
-echo "$LOG"                                                   # All of spike output is to stderr for some reason so redirect it to stdout
-retVal=`echo "$LOG" | grep -oP "(?<=tohost = )[0-9]*"`        # Spike outputs instruction trace and then "*** FAILED *** (tohost = N)" where N is the error code
-if [ $retVal -ne 0 ]; then
-  if [ $((retVal % 2)) -eq 0 ]; then                          # If even, failed on division, otherwise on modulo
-    grep -oP "(?<=TEST$((retVal / 2))DIV: ).*" ./src/main.c   # Grep in the testing source code for the correct answers
-  else                                                        # Which are put there when the file is generated
-    grep -oP "(?<=TEST$((retVal / 2))MOD: ).*" ./src/main.c
-  fi
-  exit 1
+if [ $OPTIONS = "log" ]
+then
+  LOG=$(spike --isa=rv32i -l -m0x80000000:0x10000 build/*.elf 2>&1)
+else
+  LOG=$(spike --isa=rv32i -m0x80000000:0x10000 build/*.elf 2>&1)
 fi
-exit 0
+echo "$LOG"
+
+CODE=$(echo "$LOG" | grep -oP "(?<=tohost = )[0-9]*")
+[ -z "$CODE" ] && exit 0
+
+if [ $((CODE % 2)) -eq 0 ]                                 # If even, failed on division, otherwise on modulo
+then
+  grep -oP "(?<=TEST$((CODE / 2))DIV: ).*" ./src/main.c    # Grep in the testing source code for the correct answers
+else                                                       # Which are put there when the file is generated
+  grep -oP "(?<=TEST$((CODE / 2))MOD: ).*" ./src/main.c
+fi
+exit 1
 
