@@ -1,4 +1,5 @@
-CONTAINER_USERID = $(shell id -u tomcat8)
+CONTAINER_USERID = 1000
+VERSION = v2
 
 all:
-	docker build --build-arg container_userid=$(CONTAINER_USERID) -t ecad:v1 .
+	docker build --build-arg container_userid=$(CONTAINER_USERID) -t ecad-riscv:$(VERSION) .
