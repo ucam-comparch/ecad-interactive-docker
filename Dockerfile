@@ -39,7 +39,7 @@ WORKDIR /home/user
 RUN echo -e '#!/bin/bash\n\
 export RISCV=${RISCV}\
 export PATH=$RISCV/bin:$PATH\
->> /ux/clteach/ecad/setup.bash 
+' >> /ux/clteach/ecad/setup.bash 
 
 USER user
 ENTRYPOINT ["/bin/bash"]
