@@ -36,10 +36,11 @@ RUN \
     rm -rf ${buildroot}
 WORKDIR /home/user
 
-RUN echo -e '#!/bin/bash\n\
-export RISCV=${RISCV}\
-export PATH=$RISCV/bin:$PATH\
-' >> /ux/clteach/ecad/setup.bash 
+USER root
+RUN echo "#!/bin/bash\n\
+export RISCV=${RISCV}\n\
+export PATH=$RISCV/bin:$PATH\n" > /ux/clteach/ecad/setup.bash 
 
 USER user
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash", "-l"]
+
