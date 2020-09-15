@@ -1,4 +1,5 @@
-FROM ubuntu:18.04
+ARG ubuntu_version
+FROM ubuntu:${ubuntu_version}
 ARG container_userid
 
 RUN apt-get update && \
@@ -40,6 +41,10 @@ USER root
 RUN echo "#!/bin/bash\n\
 export RISCV=${RISCV}\n\
 export PATH=$RISCV/bin:$PATH\n" > /ux/clteach/ecad/setup.bash 
+
+RUN echo "ecad:ecad" | chpasswd
+RUN adduser ecad sudo
+RUN touch /home/ecad/.sudo_as_admin_successful
 
 USER ecad
 CMD ["/bin/bash", "-l"]
