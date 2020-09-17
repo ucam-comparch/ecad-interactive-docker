@@ -25,7 +25,7 @@ RUN \
     ./configure --prefix=${RISCV} --with-arch=rv32i && \
     make
 RUN \
-    git clone https://github.com/riscv/riscv-isa-sim.git ${buildroot}/riscv-isa-sim
+    git clone https://github.com/ucam-comparch/riscv-isa-sim.git ${buildroot}/riscv-isa-sim
 RUN \
     mkdir ${buildroot}/riscv-isa-sim/build && \
     cd ${buildroot}/riscv-isa-sim/build && \
