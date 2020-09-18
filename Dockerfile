@@ -19,20 +19,16 @@ RUN chown -R ecad ${RISCV}
 USER ecad
 ENV PATH="${PATH}:${RISCV}/bin"
 RUN mkdir -p ${buildroot} && \
-    git clone --recursive https://github.com/riscv/riscv-gnu-toolchain.git ${buildroot}/riscv-gnu-toolchain
-RUN \
+    git clone --recursive https://github.com/riscv/riscv-gnu-toolchain.git ${buildroot}/riscv-gnu-toolchain && \
     cd ${buildroot}/riscv-gnu-toolchain && \
     ./configure --prefix=${RISCV} --with-arch=rv32i && \
-    make
-RUN \
-    git clone https://github.com/ucam-comparch/riscv-isa-sim.git ${buildroot}/riscv-isa-sim
-RUN \
+    make && \
+    git clone https://github.com/ucam-comparch/riscv-isa-sim.git ${buildroot}/riscv-isa-sim && \
     mkdir ${buildroot}/riscv-isa-sim/build && \
     cd ${buildroot}/riscv-isa-sim/build && \
     ../configure --prefix=${RISCV} --enable-commitlog && \
     make && \
-    make install
-RUN \
+    make install && \
     cd /home/ecad && \
     rm -rf ${buildroot}
 WORKDIR /home/ecad

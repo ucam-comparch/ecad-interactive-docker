@@ -1,5 +1,5 @@
 CONTAINER_USERID = 1000
-VERSION = v3
+VERSION = v4
 
 all:	build
 
