@@ -7,6 +7,7 @@ RUN apt-get update && \
         git ca-certificates \
         autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev \
         device-tree-compiler && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 RUN groupadd ecad
@@ -41,6 +42,10 @@ export PATH=$RISCV/bin:$PATH\n" > /ux/clteach/ecad/setup.bash
 RUN echo "ecad:ecad" | chpasswd
 RUN adduser ecad sudo
 RUN touch /home/ecad/.sudo_as_admin_successful
+RUN apt-get update && \
+    apt-get install -y bsdmainutils && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 USER ecad
 CMD ["/bin/bash", "-l"]
