@@ -43,9 +43,17 @@ RUN echo "ecad:ecad" | chpasswd
 RUN adduser ecad sudo
 RUN touch /home/ecad/.sudo_as_admin_successful
 RUN apt-get update && \
-    apt-get install -y bsdmainutils && \
+    apt-get install -y bsdmainutils pkg-config bison flex && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+RUN mkdir -p ${buildroot} && \
+    git clone --recursive https://git.kernel.org/pub/scm/utils/dtc/dtc.git ${buildroot}/dtc && \
+    cd ${buildroot}/dtc && \
+    sed -i "s/PREFIX =/PREFIX ?=/g" Makefile && \
+    make PREFIX=${RISCV} && \
+    make install PREFIX=${RISCV} && \
+    rm -rf ${buildroot}
+#RUN cp -a /usr/lib/x86_64-linux-gnu/libmpfr.so.4 /usr/lib/x86_64-linux-gnu/libmpfr.so.4.1.4 ${RISCV}/lib/
 
 USER ecad
 CMD ["/bin/bash", "-l"]
