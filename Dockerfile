@@ -1,6 +1,7 @@
 ARG ubuntu_version
 FROM ubuntu:${ubuntu_version}
 ARG container_userid
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends sudo vim nano joe emacs curl wget htop gnupg patch screen tmux rsync time strace openssh-client less \ 
@@ -28,7 +29,7 @@ RUN mkdir -p ${buildroot} && \
     mkdir ${buildroot}/riscv-isa-sim/build && \
     cd ${buildroot}/riscv-isa-sim/build && \
     ../configure --prefix=${RISCV} --enable-commitlog && \
-    make && \
+    make -j$(nproc) && \
     make install && \
     cd /home/ecad && \
     rm -rf ${buildroot}
@@ -50,7 +51,7 @@ RUN mkdir -p ${buildroot} && \
     git clone --recursive https://git.kernel.org/pub/scm/utils/dtc/dtc.git ${buildroot}/dtc && \
     cd ${buildroot}/dtc && \
     sed -i "s/PREFIX =/PREFIX ?=/g" Makefile && \
-    make PREFIX=${RISCV} && \
+    make PREFIX=${RISCV} -j$(nproc) && \
     make install PREFIX=${RISCV} && \
     rm -rf ${buildroot}
 #RUN cp -a /usr/lib/x86_64-linux-gnu/libmpfr.so.4 /usr/lib/x86_64-linux-gnu/libmpfr.so.4.1.4 ${RISCV}/lib/
