@@ -26,6 +26,8 @@ RUN mkdir -p ${buildroot} && \
     ./configure --prefix=${RISCV} --with-arch=rv32i && \
     make && \
     git clone https://github.com/ucam-comparch/riscv-isa-sim.git ${buildroot}/riscv-isa-sim && \
+    cd ${buildroot}/riscv-isa-sim && \
+    git checkout ecad-2021 && \
     mkdir ${buildroot}/riscv-isa-sim/build && \
     cd ${buildroot}/riscv-isa-sim/build && \
     ../configure --prefix=${RISCV} --enable-commitlog && \
